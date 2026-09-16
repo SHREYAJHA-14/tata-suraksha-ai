@@ -1,5 +1,5 @@
 /**
- * Main JavaScript file for Tata Suraksha AI
+ * Main JavaScript file for Suraksha AI
  */
 
-console.log("Tata Suraksha AI platform loaded.");
+console.log("Suraksha AI platform loaded.");

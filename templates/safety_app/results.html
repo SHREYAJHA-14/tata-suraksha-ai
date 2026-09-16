@@ -1,12 +1,12 @@
 {% extends 'safety_app/base.html' %}
 
-{% block title %}Assessment Results | Tata Suraksha AI{% endblock %}
+{% block title %}Assessment Results | Suraksha AI{% endblock %}
 
 {% block content %}
 <div class="container" style="max-width: 800px;">
     <!-- Score Card -->
     <div class="card" style="text-align: center; padding: 2.25rem; margin-bottom: 1.75rem;">
-        <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.35rem;">
+        <h1 style="font-size: 1.6rem; font-weight: 800; color: #1e293b; margin-bottom: 0.35rem;">
             Assessment Completed
         </h1>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
@@ -14,24 +14,24 @@
         </p>
 
         <!-- Big Score Display -->
-        <div style="display: inline-flex; align-items: center; gap: 2rem; background: #0f172a; border: 1px solid var(--border-subtle); padding: 1rem 2.25rem; border-radius: 0.65rem; margin-bottom: 1.25rem;">
+        <div style="display: inline-flex; align-items: center; gap: 2rem; background: #fff1f2; border: 1px solid var(--border-pink); padding: 1.25rem 2.25rem; border-radius: 0.75rem; margin-bottom: 1.25rem; box-shadow: 0 2px 10px rgba(244, 114, 182, 0.08);">
             <div>
                 <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Score</span>
-                <span style="font-size: 1.75rem; font-weight: 900; color: var(--text-white); font-family: monospace;">{{ attempt.score }} / {{ attempt.max_score }}</span>
+                <span style="font-size: 1.75rem; font-weight: 900; color: #1e293b; font-family: monospace;">{{ attempt.score }} / {{ attempt.max_score }}</span>
             </div>
-            <div style="width: 1px; height: 2.25rem; background: var(--border-subtle);"></div>
+            <div style="width: 1px; height: 2.25rem; background: var(--border-pink);"></div>
             <div>
                 <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Compliance</span>
-                <span style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: {% if is_passed %}#34d399{% else %}#f87171{% endif %};">{{ attempt.percentage }}%</span>
+                <span style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: {% if is_passed %}#059669{% else %}#dc2626{% endif %};">{{ attempt.percentage }}%</span>
             </div>
-            <div style="width: 1px; height: 2.25rem; background: var(--border-subtle);"></div>
+            <div style="width: 1px; height: 2.25rem; background: var(--border-pink);"></div>
             <div>
                 <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Mistakes</span>
-                <span style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: {% if incorrect_count > 0 %}#f87171{% else %}#34d399{% endif %};">{{ incorrect_count }}</span>
+                <span style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: {% if incorrect_count > 0 %}#dc2626{% else %}#059669{% endif %};">{{ incorrect_count }}</span>
             </div>
         </div>
 
-        <p style="font-size: 0.95rem; color: {% if is_passed %}#34d399{% else %}#f87171{% endif %}; font-weight: 700;">
+        <p style="font-size: 0.95rem; color: {% if is_passed %}#059669{% else %}#dc2626{% endif %}; font-weight: 700;">
             {% if is_passed %}
             <i class="fa-solid fa-circle-check"></i> Safe Operational Benchmark Achieved (≥80%)
             {% else %}
@@ -44,13 +44,13 @@
     {% if weak_topics %}
     <div class="alert-weak" style="margin-bottom: 1.75rem;">
         <div>
-            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #fef08a;">
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #92400e;">
                 <i class="fa-solid fa-triangle-exclamation"></i> Weak Safety Area Identified
             </h3>
-            <p style="font-size: 0.85rem; line-height: 1.45; color: #e2e8f0;">
+            <p style="font-size: 0.85rem; line-height: 1.45; color: #78350f;">
                 Mistakes detected in:
                 {% for w in weak_topics %}
-                <strong style="color: #facc15;">{{ w.title }} ({{ w.percentage }}%)</strong>{% if not forloop.last %}, {% endif %}
+                <strong style="color: #b45309;">{{ w.title }} ({{ w.percentage }}%)</strong>{% if not forloop.last %}, {% endif %}
                 {% endfor %}.
                 You can generate a personalized AI test targeting these exact hazard areas.
             </p>
@@ -65,45 +65,45 @@
 
     <!-- Detailed Review of Questions -->
     <div class="card" style="margin-bottom: 1.75rem;">
-        <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-white); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-pink); padding-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
             <span>Question Review ({{ answers|length }})</span>
             <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">{{ incorrect_count }} Violation{{ incorrect_count|pluralize }}</span>
         </h2>
 
         <div style="display: flex; flex-direction: column; gap: 1.15rem;">
             {% for a in answers %}
-            <div style="border: 1px solid {% if a.is_correct %}var(--border-subtle){% else %}rgba(239, 68, 68, 0.4){% endif %}; border-radius: 0.55rem; padding: 1.15rem; background: {% if a.is_correct %}#0f172a{% else %}rgba(239, 68, 68, 0.08){% endif %};">
+            <div style="border: 1px solid {% if a.is_correct %}var(--border-pink){% else %}#fecaca{% endif %}; border-radius: 0.55rem; padding: 1.15rem; background: {% if a.is_correct %}#ffffff{% else %}#fef2f2{% endif %}; box-shadow: 0 2px 6px rgba(244, 114, 182, 0.05);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; font-size: 0.8rem;">
-                    <span style="font-weight: 800; font-family: monospace; color: var(--text-muted);">Scenario #{{ forloop.counter }}</span>
-                    <span style="font-weight: 700; color: {% if a.is_correct %}#34d399{% else %}#f87171{% endif %};">
+                    <span style="font-weight: 800; font-family: monospace; color: #64748b;">Scenario #{{ forloop.counter }}</span>
+                    <span style="font-weight: 700; color: {% if a.is_correct %}#059669{% else %}#dc2626{% endif %};">
                         {% if a.is_correct %}<i class="fa-solid fa-check"></i> Compliant (+10){% else %}<i class="fa-solid fa-xmark"></i> Violation (0){% endif %}
                     </span>
                 </div>
 
-                <p style="font-weight: 700; font-size: 1rem; color: var(--text-white); margin-bottom: 0.75rem; line-height: 1.45;">
+                <p style="font-weight: 700; font-size: 1rem; color: #1e293b; margin-bottom: 0.75rem; line-height: 1.45;">
                     {{ a.question_text }}
                 </p>
 
                 <div style="font-size: 0.85rem; margin-bottom: 0.65rem; display: flex; flex-direction: column; gap: 0.35rem;">
-                    <p style="color: {% if a.is_correct %}#a7f3d0{% else %}#fca5a5{% endif %};">
+                    <p style="color: {% if a.is_correct %}#065f46{% else %}#991b1b{% endif %};">
                         <strong>Your Decision ({{ a.chosen_option }}):</strong> {{ a.chosen_text }}
                     </p>
                     {% if not a.is_correct %}
-                    <p style="color: #34d399;">
+                    <p style="color: #059669;">
                         <strong>Mandatory Safe Action ({{ a.correct_option }}):</strong> {{ a.correct_text }}
                     </p>
                     {% endif %}
                 </div>
 
                 {% if not a.is_correct and a.consequence %}
-                <div style="font-size: 0.8rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--safety-amber); padding: 0.6rem 0.85rem; margin-bottom: 0.65rem; color: #fef08a; border-radius: 0.35rem;">
-                    <strong style="color: #facc15;">Consequence in Plant:</strong> {{ a.consequence }}
+                <div style="font-size: 0.8rem; background: #fffbeb; border-left: 3px solid var(--safety-amber); padding: 0.6rem 0.85rem; margin-bottom: 0.65rem; color: #78350f; border-radius: 0.35rem; border: 1px solid #fde68a;">
+                    <strong style="color: #92400e;">Consequence in Plant:</strong> {{ a.consequence }}
                 </div>
                 {% endif %}
 
                 {% if a.sop_reference %}
                 <p style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">
-                    Tata Steel Standard: {{ a.sop_reference }}
+                    Safety Standard: {{ a.sop_reference }}
                 </p>
                 {% endif %}
             </div>

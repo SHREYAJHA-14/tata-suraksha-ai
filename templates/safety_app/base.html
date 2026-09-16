@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Tata Suraksha AI | Safety Training{% endblock %}</title>
+    <title>{% block title %}Suraksha AI | Safety Training{% endblock %}</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,12 +22,12 @@
             <!-- Brand -->
             <a href="{% url 'training_hub' %}" class="brand-wrapper">
                 <div class="brand-icon">
-                    <i class="fa-solid fa-shield"></i>
+                    <i class="fa-solid fa-shield-heart"></i>
                 </div>
                 <div>
                     <div style="display: flex; align-items: center;">
-                        <span class="brand-title">Tata Suraksha AI</span>
-                        <span class="brand-badge">Tata Steel</span>
+                        <span class="brand-title">Suraksha AI</span>
+                        <span class="brand-badge">Safety Hub</span>
                     </div>
                     <p class="brand-sub">Safety Training & Assessment</p>
                 </div>
@@ -49,9 +49,9 @@
 
             <!-- Right Profile & AI Engine Action -->
             <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <button type="button" onclick="openApiKeyModal()" class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; background: rgba(255,255,255,0.2); color: white; border: none;">
+                <button type="button" onclick="openApiKeyModal()" class="btn btn-secondary" style="padding: 0.4rem 0.75rem; font-size: 0.75rem;">
                     <i class="fa-solid fa-gear"></i>
-                    <span>{% if request.session.gemini_api_key %}Live Gemini AI{% else %}Tata Steel Engine{% endif %}</span>
+                    <span>{% if request.session.gemini_api_key %}Live Gemini AI{% else %}Safety Engine{% endif %}</span>
                 </button>
 
                 {% if employee %}
@@ -60,10 +60,10 @@
                         {{ employee.name|slice:":1" }}
                     </div>
                     <div style="text-align: left; line-height: 1.2;">
-                        <p style="font-size: 0.8rem; font-weight: 600;">{{ employee.name }}</p>
-                        <p style="font-size: 0.7rem; opacity: 0.9;">{{ employee.department.code }}</p>
+                        <p style="font-size: 0.8rem; font-weight: 700; color: #1e293b;">{{ employee.name }}</p>
+                        <p style="font-size: 0.7rem; color: #64748b;">{{ employee.department.code }}</p>
                     </div>
-                    <a href="{% url 'logout' %}" title="Log Out" style="margin-left: 0.5rem; color: #ffffff; opacity: 0.8;">
+                    <a href="{% url 'logout' %}" title="Log Out" style="margin-left: 0.5rem; color: #be185d;">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </a>
                 </div>
@@ -80,7 +80,7 @@
     <!-- Footer -->
     <footer>
         <div class="container" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem;">
-            <p>© 2026 Tata Suraksha AI • Tata Steel Industrial Safety</p>
+            <p>© 2026 Suraksha AI • Plant Industrial Safety</p>
             <p><i class="fa-solid fa-shield-check" style="color: var(--tata-blue);"></i> TSS-01 to TSS-06 Compliant</p>
         </div>
     </footer>
@@ -88,21 +88,21 @@
     <!-- Simple API Key Modal -->
     <div id="apiKeyModal" class="modal-overlay" style="display: none;">
         <div class="modal-content" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
-                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white);">AI Engine Settings</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-pink); padding-bottom: 0.75rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">AI Engine Settings</h3>
                 <button type="button" onclick="closeApiKeyModal()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</button>
             </div>
 
             <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-                Enter a Google Gemini API Key for dynamic live AI question generation, or leave blank to use the built-in Tata Steel safety question bank.
+                Enter a Google Gemini API Key for dynamic live AI question generation, or leave blank to use the built-in safety question bank.
             </p>
 
             <form action="{% url 'set_api_key' %}" method="POST">
                 {% csrf_token %}
                 <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-body);">Gemini API Key (Optional)</label>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: #334155;">Gemini API Key (Optional)</label>
                     <input type="password" name="api_key" value="{{ request.session.gemini_api_key|default:'' }}" placeholder="AIzaSy..." 
-                           style="width: 100%; padding: 0.7rem 0.9rem; background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 0.45rem; color: white; font-family: monospace; font-size: 0.85rem;">
+                           style="width: 100%; padding: 0.7rem 0.9rem; background: #fff5f7; border: 1px solid var(--border-pink); border-radius: 0.45rem; color: #1e293b; font-family: monospace; font-size: 0.85rem;">
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 0.65rem;">
                     <button type="button" onclick="closeApiKeyModal()" class="btn btn-secondary">Cancel</button>

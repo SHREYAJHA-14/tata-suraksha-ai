@@ -1,6 +1,6 @@
 """
-AI Safety Scenario & Question Generator for Tata Suraksha AI
-Supports both Live Google Gemini API and Built-in Offline Tata Steel Knowledge Base
+AI Safety Scenario & Question Generator for Suraksha AI
+Supports both Live Google Gemini API and Built-in Offline Safety Knowledge Base
 """
 
 import copy
@@ -28,7 +28,7 @@ OFFLINE_QUESTIONS = [
         ],
         "explanation": "Any crack, structural deformity, or severe impact nullifies the shock absorption capacity of an industrial hard hat. Compromised PPE must never enter an operational perimeter.",
         "consequence": "A hairline crack drastically lowers load bearing; falling debris as small as a 20mm bolt from an overhead gantry can shatter the helmet and cause fatal cranial trauma.",
-        "sop_reference": "Tata Steel Standard TSS-01 §4.3: Damaged PPE Discard Protocol."
+        "sop_reference": "Safety Standard TSS-01 §4.3: Damaged PPE Discard Protocol."
     },
     {
         "id": "ppe-02",
@@ -36,14 +36,14 @@ OFFLINE_QUESTIONS = [
         "topic_title": "Personal Protective Equipment (PPE)",
         "difficulty": "beginner",
         "scenario_context": "Rolling Mill Floor Walkway",
-        "question": "Which safety footwear specification is mandatory when walking through Tata Steel production bays and mill operational areas?",
+        "question": "Which safety footwear specification is mandatory when walking through plant production bays and mill operational areas?",
         "options": [
             {"id": "A", "text": "Any leather shoes with rubber soles and closed heels.", "is_correct": False},
             {"id": "B", "text": "Steel-toe or composite safety shoes with puncture-resistant steel midsole complying with IS 15298.", "is_correct": True},
             {"id": "C", "text": "Heavy canvas sports shoes with non-slip tread.", "is_correct": False},
             {"id": "D", "text": "Standard PVC gumboots without protective toe inserts.", "is_correct": False}
         ],
-        "explanation": "Only certified safety footwear with 200 Joules steel toe impact resistance and puncture-resistant midsoles are permitted inside Tata Steel operational bays.",
+        "explanation": "Only certified safety footwear with 200 Joules steel toe impact resistance and puncture-resistant midsoles are permitted inside operational bays.",
         "consequence": "Unrated shoes fail to protect against falling steel scraps, sharp metal burrs, and heavy rolling equipment pinch points.",
         "sop_reference": "TSS-01 §5.2: Foot Protection Standards."
     },
@@ -53,7 +53,7 @@ OFFLINE_QUESTIONS = [
         "topic_title": "Personal Protective Equipment (PPE)",
         "difficulty": "beginner",
         "scenario_context": "General Plant Roads & Raw Materials Yard",
-        "question": "When is a high-visibility retro-reflective fluorescent vest mandatory to wear inside Tata Steel plant premises?",
+        "question": "When is a high-visibility retro-reflective fluorescent vest mandatory to wear inside plant premises?",
         "options": [
             {"id": "A", "text": "Only at night when road streetlights are illuminated.", "is_correct": False},
             {"id": "B", "text": "Mandatory 24/7 at all times when walking outside administrative office buildings.", "is_correct": True},
@@ -113,7 +113,7 @@ OFFLINE_QUESTIONS = [
         ],
         "explanation": "Surgical/dust masks provide zero protection against polycyclic aromatic hydrocarbons (PAHs), benzene, and toxic coke oven emissions. Only certified cartridge respirators or PAPRs are compliant.",
         "consequence": "Acute benzene and coal tar volatile inhalation causes dizziness, respiratory burns, and long-term carcinogenic hematopoietic cell damage.",
-        "sop_reference": "Tata Steel Mandatory Life Saving Rule #3: Respiratory Protection in Chemical/Coke Zones & TSS-01 §6.2."
+        "sop_reference": "Mandatory Life Saving Rule #3: Respiratory Protection in Chemical/Coke Zones & TSS-01 §6.2."
     },
     {
         "id": "ppe-07",
@@ -219,7 +219,7 @@ OFFLINE_QUESTIONS = [
         ],
         "explanation": "Over 60% of confined space gas fatalities are would-be rescuers who rush in without breathing apparatus. Entering an unverified lethal atmosphere without SCBA guarantees a second fatality.",
         "consequence": "Entering without an SCBA results in immediate inhalation of lethal CO/H2S concentration, instant loss of consciousness, and double death.",
-        "sop_reference": "Tata Steel Life Saving Rule #1: Confined Space Protocol & Emergency Rescue SOP §11."
+        "sop_reference": "Plant Life Saving Rule #1: Confined Space Protocol & Emergency Rescue SOP §11."
     },
     {
         "id": "gas-06",
@@ -257,7 +257,7 @@ OFFLINE_QUESTIONS = [
         ],
         "explanation": "Control circuit stops (push buttons) can fail, short-circuit, or be overridden by PLC automated sequences. Mechanical intervention requires physical breaker padlocking (LOTOTO).",
         "consequence": "An automated PLC reboot or remote start can engage the drive without warning, amputating limbs inside the belt drive.",
-        "sop_reference": "Tata Steel Standard TSS-03 (LOTOTO) §2.1: Prohibition of Control Circuit Isolation."
+        "sop_reference": "Safety Standard TSS-03 (LOTOTO) §2.1: Prohibition of Control Circuit Isolation."
     },
     {
         "id": "loto-02",
@@ -265,7 +265,7 @@ OFFLINE_QUESTIONS = [
         "topic_title": "Electrical Safety & LOTO (LOTOTO)",
         "difficulty": "beginner",
         "scenario_context": "Central Maintenance Shop",
-        "question": "Under Tata Steel LOTOTO policy, who is authorized to remove your personal safety padlock from an isolation lockbox?",
+        "question": "Under Plant LOTOTO policy, who is authorized to remove your personal safety padlock from an isolation lockbox?",
         "options": [
             {"id": "A", "text": "Any shift supervisor who needs the machine running urgently.", "is_correct": False},
             {"id": "B", "text": "Strictly YOU (the lock owner) after verifying yourself and your team are clear and work is complete.", "is_correct": True},
@@ -344,9 +344,9 @@ OFFLINE_QUESTIONS = [
             {"id": "C", "text": "Hold onto your co-worker’s hand as an anchor point.", "is_correct": False},
             {"id": "D", "text": "Put on a waist belt and clip to the toe-board.", "is_correct": False}
         ],
-        "explanation": "Any open edge over 1.8 meters requires mandatory fall protection. Body waist belts are banned in Tata Steel; only double-lanyard full-body harnesses anchored to certified fall arrest points are permitted.",
+        "explanation": "Any open edge over 1.8 meters requires mandatory fall protection. Body waist belts are strictly prohibited in operational areas; only double-lanyard full-body harnesses anchored to certified fall arrest points are permitted.",
         "consequence": "A slip without anchored fall arrest results in an 18-meter free fall onto concrete/steel structures, resulting in instantaneous fatality.",
-        "sop_reference": "Tata Steel Life Saving Rule #2 & TSS-04 §1.2: Mandatory Fall Arrest Systems at Heights."
+        "sop_reference": "Plant Life Saving Rule #2 & TSS-04 §1.2: Mandatory Fall Arrest Systems at Heights."
     },
     {
         "id": "ht-02",
@@ -378,7 +378,7 @@ OFFLINE_QUESTIONS = [
             {"id": "C", "text": "Wear a cloth dust mask and enter.", "is_correct": False},
             {"id": "D", "text": "Take a deep breath and run down to grease the valve.", "is_correct": False}
         ],
-        "explanation": "Tata Steel empowers EVERY employee with Stop Work Authority. Safe oxygen concentration is strictly 19.5% to 23.5%. Below 19.5%, oxygen deficiency rapidly impairs judgement and causes brain death.",
+        "explanation": "Safety policy empowers EVERY employee with Stop Work Authority. Safe oxygen concentration is strictly 19.5% to 23.5%. Below 19.5%, oxygen deficiency rapidly impairs judgement and causes brain death.",
         "consequence": "At 18% oxygen, cognitive impairment occurs within 60 seconds. At 14%, rapid unconsciousness and irreversible asphyxiation occur before the worker can climb the ladder.",
         "sop_reference": "TSS-04 §6.4: Confined Space Atmospheric Criteria & Employee Stop Work Authority."
     },
@@ -515,7 +515,7 @@ OFFLINE_QUESTIONS = [
         "topic_title": "Emergency Response & Golden Hour Protocols",
         "difficulty": "beginner",
         "scenario_context": "Plant Central Control Room",
-        "question": "A Continuous Wailing Siren (Tone 1 - 3 minutes duration) sounds across the Jamshedpur Works. What does this siren code indicate according to Tata Steel Emergency Protocol?",
+        "question": "A Continuous Wailing Siren (Tone 1 - 3 minutes duration) sounds across the Jamshedpur Works. What does this siren code indicate according to Plant Emergency Protocol?",
         "options": [
             {"id": "A", "text": "Shift changeover announcement.", "is_correct": False},
             {"id": "B", "text": "Major Plant Emergency (Toxic Gas Escape / Explosion). All non-essential personnel must immediately check wind socks and evacuate cross-wind to designated Assembly Points.", "is_correct": True},
@@ -588,7 +588,7 @@ def shuffle_question_options(question):
 def generate_questions(topic_id="all", department_name="Plant Operations", difficulty="intermediate", count=5, is_remediation=False, weak_topic_ids=None, api_key=None):
     """
     Generates assessment questions.
-    Uses Gemini API if an API key is provided; otherwise uses built-in Tata Steel knowledge base.
+    Uses Gemini API if an API key is provided; otherwise uses built-in safety knowledge base.
     Guarantees that:
     1. Exactly `count` questions are returned (e.g. 3, 5, or 10).
     2. Selected difficulty tier is prioritized.
@@ -613,7 +613,7 @@ def generate_questions(topic_id="all", department_name="Plant Operations", diffi
                 weak_topic_ids=weak_topic_ids
             )
         except Exception as e:
-            print(f"[Tata Suraksha AI] Gemini API call error: {e}. Falling back to offline knowledge base.")
+            print(f"[Suraksha AI] Gemini API call error: {e}. Falling back to offline knowledge base.")
 
     # If Gemini returns fewer questions than requested or failed, use offline engine
     if not questions or len(questions) < count:
@@ -690,7 +690,7 @@ def call_gemini_api(api_key, topic_id, department_name, difficulty, count, is_re
     Calls Google Gemini REST API using Python requests library.
     """
     system_prompt = (
-        "You are Tata Suraksha AI, Senior Industrial Safety Officer at Tata Steel Works. "
+        "You are Suraksha AI, Senior Industrial Safety Officer at Plant Operations. "
         "Generate realistic shop-floor safety assessment questions and dilemmas for plant employees. "
         f"You MUST generate EXACTLY {count} questions at the '{difficulty}' level. "
         "Randomly distribute the correct answer among options A, B, C, and D. Do not put the correct answer on the same option every time. "

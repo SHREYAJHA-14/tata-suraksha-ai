@@ -6,7 +6,7 @@ class Command(BaseCommand):
     help = "Seeds initial plant departments, safety standards, and demo profiles."
 
     def handle(self, *args, **options):
-        self.stdout.write("Seeding Tata Steel Safety Data...")
+        self.stdout.write("Seeding Safety Standards Data...")
 
         # 1. Departments
         departments_data = [
@@ -66,7 +66,7 @@ class Command(BaseCommand):
                 "topic_id": "ppe",
                 "title": "Personal Protective Equipment (PPE)",
                 "sop_code": "TSS-01",
-                "sop_name": "Tata Steel Standard: Mandatory PPE & Specialized Gear",
+                "sop_name": "Safety Standard: Mandatory PPE & Specialized Gear",
                 "description": "Proper inspection, donning, maintenance, and zero-tolerance usage of helmets, safety shoes, flame-retardant suits, and respirator units.",
                 "icon": "shield"
             },
@@ -74,7 +74,7 @@ class Command(BaseCommand):
                 "topic_id": "fire-gas",
                 "title": "Fire Safety & Toxic Gas Hazards (CO / Benzene)",
                 "sop_code": "TSS-02",
-                "sop_name": "Tata Steel Standard: Gas Monitoring & Emergency Evacuation",
+                "sop_name": "Safety Standard: Gas Monitoring & Emergency Evacuation",
                 "description": "CO gas leak detection, personal multi-gas monitors, explosive limit protocols, SCBA usage, and assembly points.",
                 "icon": "flame"
             },
@@ -82,7 +82,7 @@ class Command(BaseCommand):
                 "topic_id": "loto",
                 "title": "Electrical Safety & LOTO (LOTOTO)",
                 "sop_code": "TSS-03",
-                "sop_name": "Tata Steel Standard: Isolation of Hazardous Energy (LOTOTO)",
+                "sop_name": "Safety Standard: Isolation of Hazardous Energy (LOTOTO)",
                 "description": "Lock-out, Tag-out, Try-out procedure. Electrical isolation, arc flash PPE, and zero-energy verification before machine intervention.",
                 "icon": "zap"
             },
@@ -90,7 +90,7 @@ class Command(BaseCommand):
                 "topic_id": "heights",
                 "title": "Working at Heights & Confined Spaces",
                 "sop_code": "TSS-04",
-                "sop_name": "Tata Steel Standard: Fall Protection & Tank Entry Clearance",
+                "sop_name": "Safety Standard: Fall Protection & Tank Entry Clearance",
                 "description": "Full-body harnesses, 100% tie-off, scaffolding green tags, oxygen testing (19.5% - 23.5%), and continuous hole-watch supervision.",
                 "icon": "building"
             },
@@ -98,7 +98,7 @@ class Command(BaseCommand):
                 "topic_id": "molten-metal",
                 "title": "Molten Metal & Hot Heavy Cranes",
                 "sop_code": "TSS-05",
-                "sop_name": "Tata Steel Standard: Hot Metal Handling & Overhead Crane Safety",
+                "sop_name": "Safety Standard: Hot Metal Handling & Overhead Crane Safety",
                 "description": "Exclusion red zones, ladle crane wire rope inspections, slag pit water moisture prevention, and radiant shielding.",
                 "icon": "alert-triangle"
             },
@@ -106,7 +106,7 @@ class Command(BaseCommand):
                 "topic_id": "emergency",
                 "title": "Emergency Response & Golden Hour Protocols",
                 "sop_code": "TSS-06",
-                "sop_name": "Tata Steel Standard: Plant Disaster Management & Medical First Aid",
+                "sop_name": "Safety Standard: Plant Disaster Management & Medical First Aid",
                 "description": "Plant siren codes, chemical splash deluge showers, burns first aid, automated external defibrillators (AED), and incident escalation.",
                 "icon": "heart"
             }
@@ -226,9 +226,9 @@ class Command(BaseCommand):
         if not User.objects.filter(username="shreya").exists():
             User.objects.create_superuser(
                 username="shreya",
-                email="shreya@tatasteel.com",
+                email="shreya@suraksha.ai",
                 password="school28"
             )
             self.stdout.write(self.style.SUCCESS("Provisioned superuser: shreya / school28"))
 
-        self.stdout.write(self.style.SUCCESS("Successfully seeded Tata Steel safety data and demo profiles!"))
+        self.stdout.write(self.style.SUCCESS("Successfully seeded safety standards data and profiles!"))

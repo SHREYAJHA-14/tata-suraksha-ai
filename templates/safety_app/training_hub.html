@@ -1,26 +1,26 @@
 {% extends 'safety_app/base.html' %}
 
-{% block title %}Training Hub | Tata Suraksha AI{% endblock %}
+{% block title %}Training Hub | Suraksha AI{% endblock %}
 
 {% block content %}
 <div class="container">
     <!-- Top Welcome Card -->
     <div class="card" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
         <div>
-            <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.25rem;">
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 0.25rem;">
                 {{ employee.department.name }}
             </h1>
             <p style="font-size: 0.85rem; color: var(--text-muted);">
-                Employee: <strong style="color: var(--text-white);">{{ employee.name }}</strong> ({{ employee.emp_id }})
+                Employee: <strong style="color: #1e293b;">{{ employee.name }}</strong> ({{ employee.emp_id }})
             </p>
         </div>
 
         <div style="display: flex; gap: 0.85rem; font-size: 0.85rem;">
-            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center;">
+            <div style="background: #fff1f2; border: 1px solid var(--border-pink); padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center;">
                 <span style="font-weight: 800; font-size: 1.25rem; color: var(--tata-blue); display: block;">{{ employee.attempts.count }}</span>
                 <span style="color: var(--text-muted); font-size: 0.75rem;">Tests Completed</span>
             </div>
-            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center;">
+            <div style="background: #fff1f2; border: 1px solid var(--border-pink); padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center;">
                 <span style="font-weight: 800; font-size: 1.25rem; color: {% if weak_topics %}#f59e0b{% else %}#10b981{% endif %}; display: block;">
                     {{ weak_topics|length }}
                 </span>
@@ -33,13 +33,13 @@
     {% if weak_topics %}
     <div class="alert-weak">
         <div>
-            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #fef08a;">
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #92400e;">
                 <i class="fa-solid fa-triangle-exclamation"></i> Weak Safety Area Identified
             </h3>
-            <p style="font-size: 0.85rem; line-height: 1.45; color: #e2e8f0;">
+            <p style="font-size: 0.85rem; line-height: 1.45; color: #78350f;">
                 You recently scored low in:
                 {% for w in weak_topics %}
-                <strong style="color: #facc15;">{{ w.title }} ({{ w.percentage }}% accuracy)</strong>{% if not forloop.last %}, {% endif %}
+                <strong style="color: #b45309;">{{ w.title }} ({{ w.percentage }}% accuracy)</strong>{% if not forloop.last %}, {% endif %}
                 {% endfor %}.
                 Take a targeted AI remediation retest to improve your safety score.
             </p>
@@ -60,8 +60,8 @@
         <div class="card" style="margin-bottom: 1.5rem; padding: 1rem 1.25rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem;">
-                    <span style="font-weight: 600; color: var(--text-white);">Difficulty Tier:</span>
-                    <select name="difficulty" style="padding: 0.45rem 0.75rem; background: #0f172a; color: white; border: 1px solid var(--border-subtle); border-radius: 0.4rem; font-size: 0.85rem;">
+                    <span style="font-weight: 700; color: #1e293b;">Difficulty Tier:</span>
+                    <select name="difficulty" style="padding: 0.45rem 0.75rem; background: #ffffff; color: #1e293b; border: 1px solid var(--border-pink); border-radius: 0.4rem; font-size: 0.85rem; font-weight: 600;">
                         <option value="beginner">Level 1 (Induction / Basic)</option>
                         <option value="intermediate" selected>Level 2 (Field Operations)</option>
                         <option value="advanced">Level 3 (Critical / Emergency)</option>
@@ -69,8 +69,8 @@
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem;">
-                    <span style="font-weight: 600; color: var(--text-white);">Questions:</span>
-                    <select name="count" style="padding: 0.45rem 0.75rem; background: #0f172a; color: white; border: 1px solid var(--border-subtle); border-radius: 0.4rem; font-size: 0.85rem;">
+                    <span style="font-weight: 700; color: #1e293b;">Questions:</span>
+                    <select name="count" style="padding: 0.45rem 0.75rem; background: #ffffff; color: #1e293b; border: 1px solid var(--border-pink); border-radius: 0.4rem; font-size: 0.85rem; font-weight: 600;">
                         <option value="3">3 Questions</option>
                         <option value="5" selected>5 Questions</option>
                         <option value="10">10 Questions</option>
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Topic Selection -->
-        <h2 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.75rem;">
+        <h2 style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 0.75rem;">
             Select Training Topic
         </h2>
 
@@ -89,33 +89,33 @@
             <div class="topic-card {% if forloop.first %}selected{% endif %}" onclick="selectTopic(this, '{{ item.topic.topic_id }}')">
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
-                        <span style="font-size: 0.7rem; font-weight: 700; font-family: monospace; background: #0f172a; border: 1px solid var(--border-subtle); color: #94a3b8; padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                        <span style="font-size: 0.7rem; font-weight: 700; font-family: monospace; background: #fdf2f8; border: 1px solid #fbcfe8; color: #be185d; padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
                             {{ item.topic.sop_code }}
                         </span>
 
                         {% if item.perf.total > 0 %}
                             {% if item.is_weak %}
-                            <span style="font-size: 0.7rem; font-weight: 700; color: #fca5a5; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                            <span style="font-size: 0.7rem; font-weight: 700; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
                                 Weak ({{ item.perf.percentage }}%)
                             </span>
                             {% elif item.is_mastered %}
-                            <span style="font-size: 0.7rem; font-weight: 700; color: #6ee7b7; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                            <span style="font-size: 0.7rem; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
                                 Cleared ({{ item.perf.percentage }}%)
                             </span>
                             {% else %}
-                            <span style="font-size: 0.7rem; color: var(--text-muted);">
+                            <span style="font-size: 0.7rem; color: var(--text-muted); background: #f1f5f9; padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
                                 {{ item.perf.percentage }}% Accuracy
                             </span>
                             {% endif %}
                         {% else %}
-                        <span style="font-size: 0.7rem; color: #64748b;">Not Attempted</span>
+                        <span style="font-size: 0.7rem; color: #94a3b8; background: #f8fafc; padding: 0.15rem 0.45rem; border-radius: 0.35rem; border: 1px solid #e2e8f0;">Not Attempted</span>
                         {% endif %}
                     </div>
 
-                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.35rem;">
+                    <h3 style="font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.35rem;">
                         {{ item.topic.title }}
                     </h3>
-                    <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
+                    <p style="font-size: 0.8rem; color: var(--text-body); line-height: 1.45;">
                         {{ item.topic.description }}
                     </p>
                 </div>

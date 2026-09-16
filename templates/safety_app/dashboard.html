@@ -1,32 +1,32 @@
 {% extends 'safety_app/base.html' %}
 
-{% block title %}Safety Profile | Tata Suraksha AI{% endblock %}
+{% block title %}Safety Profile | Suraksha AI{% endblock %}
 
 {% block content %}
 <div class="container" style="max-width: 900px; display: flex; flex-direction: column; gap: 1.75rem;">
     <!-- Profile Card -->
     <div class="card" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.25rem;">
         <div>
-            <div style="font-size: 0.75rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; margin-bottom: 0.25rem;">
+            <div style="font-size: 0.75rem; font-weight: 800; color: #ec4899; text-transform: uppercase; margin-bottom: 0.25rem; letter-spacing: 0.04em;">
                 Worker Safety Profile
             </div>
-            <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.25rem;">
+            <h1 style="font-size: 1.6rem; font-weight: 800; color: #1e293b; margin-bottom: 0.25rem;">
                 {{ employee.name }}
             </h1>
             <p style="font-size: 0.85rem; color: var(--text-muted);">
-                Department: <strong style="color: var(--text-white);">{{ employee.department.name }}</strong> ({{ employee.emp_id }})
+                Department: <strong style="color: #1e293b;">{{ employee.department.name }}</strong> ({{ employee.emp_id }})
             </p>
         </div>
 
         <div style="display: flex; gap: 1rem; text-align: center;">
-            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.65rem 1.25rem; border-radius: 0.5rem;">
-                <span style="font-size: 1.5rem; font-weight: 900; color: {% if overall_accuracy >= 80 %}#34d399{% else %}#f59e0b{% endif %}; display: block; font-family: monospace;">
+            <div style="background: #fff1f2; border: 1px solid var(--border-pink); padding: 0.65rem 1.25rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(244, 114, 182, 0.08);">
+                <span style="font-size: 1.5rem; font-weight: 900; color: {% if overall_accuracy >= 80 %}#059669{% else %}#f59e0b{% endif %}; display: block; font-family: monospace;">
                     {{ overall_accuracy }}%
                 </span>
                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Overall Compliance</span>
             </div>
-            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.65rem 1.25rem; border-radius: 0.5rem;">
-                <span style="font-size: 1.5rem; font-weight: 900; color: var(--text-white); display: block; font-family: monospace;">
+            <div style="background: #fff1f2; border: 1px solid var(--border-pink); padding: 0.65rem 1.25rem; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(244, 114, 182, 0.08);">
+                <span style="font-size: 1.5rem; font-weight: 900; color: #1e293b; display: block; font-family: monospace;">
                     {{ total_attempts }}
                 </span>
                 <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Assessments</span>
@@ -38,13 +38,13 @@
     {% if weak_topics %}
     <div class="alert-weak">
         <div>
-            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #fef08a;">
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #92400e;">
                 <i class="fa-solid fa-triangle-exclamation"></i> Identified Vulnerabilities
             </h3>
-            <p style="font-size: 0.85rem; color: #e2e8f0;">
+            <p style="font-size: 0.85rem; color: #78350f;">
                 Low compliance detected in:
                 {% for w in weak_topics %}
-                <strong style="color: #facc15;">{{ w.title }} ({{ w.percentage }}%)</strong>{% if not forloop.last %}, {% endif %}
+                <strong style="color: #b45309;">{{ w.title }} ({{ w.percentage }}%)</strong>{% if not forloop.last %}, {% endif %}
                 {% endfor %}.
             </p>
         </div>
@@ -58,35 +58,35 @@
 
     <!-- Topic Accuracy Breakdown -->
     <div class="card">
-        <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-white); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.85rem;">
+        <h2 style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-pink); padding-bottom: 0.85rem;">
             Topic Accuracy Breakdown
         </h2>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 1.15rem;">
             {% for item in topic_metrics %}
-            <div style="border: 1px solid var(--border-subtle); border-radius: 0.5rem; padding: 1.1rem; background: #0f172a;">
+            <div style="border: 1px solid var(--border-pink); border-radius: 0.5rem; padding: 1.1rem; background: #ffffff; box-shadow: 0 2px 6px rgba(244, 114, 182, 0.05);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
-                    <span style="font-size: 0.75rem; font-weight: 800; font-family: monospace; color: #38bdf8;">{{ item.topic.sop_code }}</span>
+                    <span style="font-size: 0.75rem; font-weight: 800; font-family: monospace; color: #be185d; background: #fdf2f8; padding: 0.1rem 0.45rem; border-radius: 0.3rem; border: 1px solid #fbcfe8;">{{ item.topic.sop_code }}</span>
                     {% if item.perf.total > 0 %}
                         {% if item.is_weak %}
-                        <span style="font-size: 0.7rem; font-weight: 700; color: #fca5a5; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.1rem 0.4rem; border-radius: 0.3rem;">Weak ({{ item.perf.percentage }}%)</span>
+                        <span style="font-size: 0.7rem; font-weight: 700; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 0.1rem 0.4rem; border-radius: 0.3rem;">Weak ({{ item.perf.percentage }}%)</span>
                         {% elif item.is_mastered %}
-                        <span style="font-size: 0.7rem; font-weight: 700; color: #6ee7b7; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.1rem 0.4rem; border-radius: 0.3rem;">Cleared ({{ item.perf.percentage }}%)</span>
+                        <span style="font-size: 0.7rem; font-weight: 700; color: #059669; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 0.1rem 0.4rem; border-radius: 0.3rem;">Cleared ({{ item.perf.percentage }}%)</span>
                         {% else %}
-                        <span style="font-size: 0.7rem; color: var(--text-muted);">{{ item.perf.percentage }}%</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted); background: #f1f5f9; padding: 0.1rem 0.4rem; border-radius: 0.3rem;">{{ item.perf.percentage }}%</span>
                         {% endif %}
                     {% else %}
-                    <span style="font-size: 0.7rem; color: #64748b;">Untested</span>
+                    <span style="font-size: 0.7rem; color: #94a3b8; background: #f8fafc; padding: 0.1rem 0.4rem; border-radius: 0.3rem; border: 1px solid #e2e8f0;">Untested</span>
                     {% endif %}
                 </div>
 
-                <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.65rem; color: var(--text-white);">
+                <h3 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.65rem; color: #1e293b;">
                     {{ item.topic.title }}
                 </h3>
 
                 <!-- Progress Bar -->
-                <div style="width: 100%; height: 6px; background: #1e293b; border-radius: 4px; overflow: hidden; margin-bottom: 0.45rem; border: 1px solid var(--border-subtle);">
-                    <div style="width: {{ item.perf.percentage }}%; height: 100%; background: {% if item.is_weak %}#ef4444{% elif item.is_mastered %}#10b981{% else %}#0284c7{% endif %};"></div>
+                <div style="width: 100%; height: 6px; background: #fce7f3; border-radius: 4px; overflow: hidden; margin-bottom: 0.45rem; border: 1px solid var(--border-pink);">
+                    <div style="width: {{ item.perf.percentage }}%; height: 100%; background: {% if item.is_weak %}#ef4444{% elif item.is_mastered %}#10b981{% else %}#ec4899{% endif %};"></div>
                 </div>
                 <span style="font-size: 0.75rem; color: var(--text-muted);">{{ item.perf.correct }} correct / {{ item.perf.total }} answered</span>
             </div>
@@ -96,7 +96,7 @@
 
     <!-- Recent History Table -->
     <div class="card">
-        <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-white); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.85rem;">
+        <h2 style="font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-pink); padding-bottom: 0.85rem;">
             Recent Assessment History
         </h2>
 
@@ -104,7 +104,7 @@
         <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
+                    <tr style="border-bottom: 1px solid var(--border-pink); color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase;">
                         <th style="padding: 0.65rem 0.5rem;">Date</th>
                         <th style="padding: 0.65rem 0.5rem;">Topic</th>
                         <th style="padding: 0.65rem 0.5rem;">Tier</th>
@@ -114,21 +114,21 @@
                 </thead>
                 <tbody>
                     {% for a in attempts %}
-                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); color: var(--text-body);">
+                    <tr style="border-bottom: 1px solid var(--border-subtle); color: var(--text-body);">
                         <td style="padding: 0.75rem 0.5rem; color: var(--text-muted); font-family: monospace;">
                             {{ a.created_at|date:"M d, Y" }}
                         </td>
-                        <td style="padding: 0.75rem 0.5rem; font-weight: 700; color: var(--text-white);">
+                        <td style="padding: 0.75rem 0.5rem; font-weight: 700; color: #1e293b;">
                             {{ a.topic_title }}
                         </td>
                         <td style="padding: 0.75rem 0.5rem; text-transform: capitalize; color: var(--text-muted);">
                             {{ a.difficulty }}
                         </td>
-                        <td style="padding: 0.75rem 0.5rem; font-weight: 700; font-family: monospace;">
+                        <td style="padding: 0.75rem 0.5rem; font-weight: 700; font-family: monospace; color: #1e293b;">
                             {{ a.score }} / {{ a.max_score }} ({{ a.percentage }}%)
                         </td>
                         <td style="padding: 0.75rem 0.5rem;">
-                            <span style="font-size: 0.75rem; font-weight: 700; color: {% if a.percentage >= 80 %}#34d399{% else %}#f87171{% endif %};">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: {% if a.percentage >= 80 %}#059669{% else %}#dc2626{% endif %};">
                                 {% if a.percentage >= 80 %}Cleared{% else %}Needs Retest{% endif %}
                             </span>
                         </td>
