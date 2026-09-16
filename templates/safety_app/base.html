@@ -60,10 +60,10 @@
                         {{ employee.name|slice:":1" }}
                     </div>
                     <div style="text-align: left; line-height: 1.2;">
-                        <p style="font-size: 0.8rem; font-weight: 700; color: #1e293b;">{{ employee.name }}</p>
-                        <p style="font-size: 0.7rem; color: #64748b;">{{ employee.department.code }}</p>
+                        <p style="font-size: 0.8rem; font-weight: 700; color: var(--text-white);">{{ employee.name }}</p>
+                        <p style="font-size: 0.7rem; color: var(--text-muted);">{{ employee.department.code }}</p>
                     </div>
-                    <a href="{% url 'logout' %}" title="Log Out" style="margin-left: 0.5rem; color: #be185d;">
+                    <a href="{% url 'logout' %}" title="Log Out" style="margin-left: 0.5rem; color: #ef4444;">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </a>
                 </div>
@@ -88,8 +88,8 @@
     <!-- Simple API Key Modal -->
     <div id="apiKeyModal" class="modal-overlay" style="display: none;">
         <div class="modal-content" style="padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-pink); padding-bottom: 0.75rem;">
-                <h3 style="font-size: 1.1rem; font-weight: 700; color: #1e293b;">AI Engine Settings</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.75rem;">
+                <h3 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white);">AI Engine Settings</h3>
                 <button type="button" onclick="closeApiKeyModal()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; color: var(--text-muted);">&times;</button>
             </div>
 
@@ -100,9 +100,9 @@
             <form action="{% url 'set_api_key' %}" method="POST">
                 {% csrf_token %}
                 <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: #334155;">Gemini API Key (Optional)</label>
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 0.4rem; color: var(--text-muted);">Gemini API Key (Optional)</label>
                     <input type="password" name="api_key" value="{{ request.session.gemini_api_key|default:'' }}" placeholder="AIzaSy..." 
-                           style="width: 100%; padding: 0.7rem 0.9rem; background: #fff5f7; border: 1px solid var(--border-pink); border-radius: 0.45rem; color: #1e293b; font-family: monospace; font-size: 0.85rem;">
+                           style="width: 100%; padding: 0.7rem 0.9rem; background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 0.45rem; color: var(--text-white); font-family: monospace; font-size: 0.85rem;">
                 </div>
                 <div style="display: flex; justify-content: flex-end; gap: 0.65rem;">
                     <button type="button" onclick="closeApiKeyModal()" class="btn btn-secondary">Cancel</button>

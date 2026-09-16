@@ -6,10 +6,10 @@
 <div class="container" style="max-width: 480px; margin: 2.5rem auto;">
     <!-- Simple Header -->
     <div style="text-align: center; margin-bottom: 2rem;">
-        <h1 style="font-size: 2rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.5rem;">
             Suraksha AI
         </h1>
-        <p style="color: #64748b; font-size: 0.9rem;">
+        <p style="color: var(--text-muted); font-size: 0.9rem;">
             Safety Training & Diagnostic Assessment Platform
         </p>
     </div>
@@ -17,7 +17,7 @@
     <!-- Auth Card -->
     <div class="card" style="padding: 1.75rem;">
         <!-- Tab Navigation -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; background: #fff1f2; padding: 0.35rem; border-radius: 0.5rem; border: 1px solid var(--border-pink);">
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; background: #0f172a; padding: 0.35rem; border-radius: 0.5rem; border: 1px solid var(--border-subtle);">
             <button type="button" id="tabLoginBtn" onclick="switchTab('login')" 
                     style="flex: 1; padding: 0.65rem; border-radius: 0.35rem; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;">
                 Log In
@@ -30,7 +30,7 @@
 
         <!-- Error Alert -->
         {% if error %}
-        <div style="background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 0.85rem 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.85rem; display: flex; align-items: flex-start; gap: 0.65rem; line-height: 1.45;">
+        <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.35); color: #fca5a5; padding: 0.85rem 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.85rem; display: flex; align-items: flex-start; gap: 0.65rem; line-height: 1.45;">
             <i class="fa-solid fa-triangle-exclamation" style="margin-top: 0.15rem; color: #ef4444; flex-shrink: 0;"></i>
             <span>{{ error }}</span>
         </div>
@@ -41,12 +41,12 @@
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
                 <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 0.45rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.45rem;">
                         Registered Employee ID
                     </label>
                     <input type="text" name="emp_id" value="{{ emp_id|default:'' }}" required placeholder="Enter Employee ID" 
-                           style="width: 100%; padding: 0.8rem 1rem; background: #ffffff; border: 1px solid var(--border-pink); border-radius: 0.5rem; color: #1e293b; font-size: 0.95rem; font-family: monospace;">
-                    <span style="display: block; font-size: 0.75rem; color: #64748b; margin-top: 0.4rem;">
+                           style="width: 100%; padding: 0.8rem 1rem; background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-white); font-size: 0.95rem; font-family: monospace;">
+                    <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">
                         Only pre-registered employees can log in.
                     </span>
                 </div>
@@ -57,9 +57,9 @@
                 </button>
             </form>
 
-            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-pink); padding-top: 1rem; font-size: 0.85rem; color: #64748b;">
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
                 Don't have an Employee ID? 
-                <a href="javascript:void(0)" onclick="switchTab('signup')" style="color: #ec4899; font-weight: 700; text-decoration: none;">
+                <a href="javascript:void(0)" onclick="switchTab('signup')" style="color: var(--tata-blue); font-weight: 700; text-decoration: none;">
                     Sign Up here &rarr;
                 </a>
             </div>
@@ -70,30 +70,30 @@
             <form action="{% url 'signup' %}" method="POST">
                 {% csrf_token %}
                 <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
                         Full Name
                     </label>
                     <input type="text" name="name" value="{{ name|default:'' }}" required placeholder="Enter Full Name" 
-                           style="width: 100%; padding: 0.75rem 1rem; background: #ffffff; border: 1px solid var(--border-pink); border-radius: 0.5rem; color: #1e293b; font-size: 0.9rem;">
+                           style="width: 100%; padding: 0.75rem 1rem; background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-white); font-size: 0.9rem;">
                 </div>
 
                 <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
                         Set Permanent Employee ID
                     </label>
                     <input type="text" name="emp_id" value="{{ emp_id|default:'' }}" required placeholder="Enter Employee ID (e.g. TS-1049)" 
-                           style="width: 100%; padding: 0.75rem 1rem; background: #ffffff; border: 1px solid var(--border-pink); border-radius: 0.5rem; color: #1e293b; font-size: 0.9rem; font-family: monospace;">
-                    <span style="display: block; font-size: 0.75rem; color: #64748b; margin-top: 0.35rem;">
+                           style="width: 100%; padding: 0.75rem 1rem; background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-white); font-size: 0.9rem; font-family: monospace;">
+                    <span style="display: block; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem;">
                         Once set, you will use this ID to log in forever.
                     </span>
                 </div>
 
                 <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #334155; margin-bottom: 0.4rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
                         Plant Department
                     </label>
                     <select name="department_id" required 
-                            style="width: 100%; padding: 0.75rem 1rem; background: #ffffff; border: 1px solid var(--border-pink); border-radius: 0.5rem; color: #1e293b; font-size: 0.9rem;">
+                            style="width: 100%; padding: 0.75rem 1rem; background: #0f172a; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: var(--text-white); font-size: 0.9rem;">
                         <option value="" disabled {% if not selected_dept %}selected{% endif %}>-- Select Plant Department --</option>
                         {% for dept in departments %}
                         <option value="{{ dept.id }}" {% if selected_dept == dept.id %}selected{% endif %}>
@@ -109,9 +109,9 @@
                 </button>
             </form>
 
-            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-pink); padding-top: 1rem; font-size: 0.85rem; color: #64748b;">
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
                 Already have an ID? 
-                <a href="javascript:void(0)" onclick="switchTab('login')" style="color: #ec4899; font-weight: 700; text-decoration: none;">
+                <a href="javascript:void(0)" onclick="switchTab('login')" style="color: var(--tata-blue); font-weight: 700; text-decoration: none;">
                     Log In with ID &rarr;
                 </a>
             </div>
@@ -134,14 +134,14 @@
             tabSignupBtn.style.background = 'var(--tata-blue)';
             tabSignupBtn.style.color = '#ffffff';
             tabLoginBtn.style.background = 'transparent';
-            tabLoginBtn.style.color = '#64748b';
+            tabLoginBtn.style.color = 'var(--text-muted)';
         } else {
             loginSec.style.display = 'block';
             signupSec.style.display = 'none';
             tabLoginBtn.style.background = 'var(--tata-blue)';
             tabLoginBtn.style.color = '#ffffff';
             tabSignupBtn.style.background = 'transparent';
-            tabSignupBtn.style.color = '#64748b';
+            tabSignupBtn.style.color = 'var(--text-muted)';
         }
     }
 
