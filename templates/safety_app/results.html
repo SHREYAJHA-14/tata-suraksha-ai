@@ -1,0 +1,126 @@
+{% extends 'safety_app/base.html' %}
+
+{% block title %}Assessment Results | Tata Suraksha AI{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <!-- Score Card -->
+    <div class="card" style="text-align: center; padding: 2.25rem; margin-bottom: 1.75rem;">
+        <h1 style="font-size: 1.6rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.35rem;">
+            Assessment Completed
+        </h1>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+            Department: {{ employee.department.name }} ({{ employee.emp_id }})
+        </p>
+
+        <!-- Big Score Display -->
+        <div style="display: inline-flex; align-items: center; gap: 2rem; background: #0f172a; border: 1px solid var(--border-subtle); padding: 1rem 2.25rem; border-radius: 0.65rem; margin-bottom: 1.25rem;">
+            <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Score</span>
+                <span style="font-size: 1.75rem; font-weight: 900; color: var(--text-white); font-family: monospace;">{{ attempt.score }} / {{ attempt.max_score }}</span>
+            </div>
+            <div style="width: 1px; height: 2.25rem; background: var(--border-subtle);"></div>
+            <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Compliance</span>
+                <span style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: {% if is_passed %}#34d399{% else %}#f87171{% endif %};">{{ attempt.percentage }}%</span>
+            </div>
+            <div style="width: 1px; height: 2.25rem; background: var(--border-subtle);"></div>
+            <div>
+                <span style="font-size: 0.75rem; color: var(--text-muted); display: block; text-transform: uppercase; font-weight: 700;">Mistakes</span>
+                <span style="font-size: 1.75rem; font-weight: 900; font-family: monospace; color: {% if incorrect_count > 0 %}#f87171{% else %}#34d399{% endif %};">{{ incorrect_count }}</span>
+            </div>
+        </div>
+
+        <p style="font-size: 0.95rem; color: {% if is_passed %}#34d399{% else %}#f87171{% endif %}; font-weight: 700;">
+            {% if is_passed %}
+            <i class="fa-solid fa-circle-check"></i> Safe Operational Benchmark Achieved (≥80%)
+            {% else %}
+            <i class="fa-solid fa-triangle-exclamation"></i> Compliance Warning: Immediate Retest Recommended (&lt;80%)
+            {% endif %}
+        </p>
+    </div>
+
+    <!-- WEAK AREAS IDENTIFIED (AI RETEST BUTTON) -->
+    {% if weak_topics %}
+    <div class="alert-weak" style="margin-bottom: 1.75rem;">
+        <div>
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #fef08a;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Weak Safety Area Identified
+            </h3>
+            <p style="font-size: 0.85rem; line-height: 1.45; color: #e2e8f0;">
+                Mistakes detected in:
+                {% for w in weak_topics %}
+                <strong style="color: #facc15;">{{ w.title }} ({{ w.percentage }}%)</strong>{% if not forloop.last %}, {% endif %}
+                {% endfor %}.
+                You can generate a personalized AI test targeting these exact hazard areas.
+            </p>
+        </div>
+
+        <a href="{% url 'retest_weak_areas' %}" class="btn btn-warning" style="flex-shrink: 0;">
+            <i class="fa-solid fa-bolt"></i>
+            <span>Train My Weak Areas (AI Retest)</span>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Detailed Review of Questions -->
+    <div class="card" style="margin-bottom: 1.75rem;">
+        <h2 style="font-size: 1.15rem; font-weight: 800; color: var(--text-white); margin-bottom: 1.25rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.85rem; display: flex; justify-content: space-between; align-items: center;">
+            <span>Question Review ({{ answers|length }})</span>
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">{{ incorrect_count }} Violation{{ incorrect_count|pluralize }}</span>
+        </h2>
+
+        <div style="display: flex; flex-direction: column; gap: 1.15rem;">
+            {% for a in answers %}
+            <div style="border: 1px solid {% if a.is_correct %}var(--border-subtle){% else %}rgba(239, 68, 68, 0.4){% endif %}; border-radius: 0.55rem; padding: 1.15rem; background: {% if a.is_correct %}#0f172a{% else %}rgba(239, 68, 68, 0.08){% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; font-size: 0.8rem;">
+                    <span style="font-weight: 800; font-family: monospace; color: var(--text-muted);">Scenario #{{ forloop.counter }}</span>
+                    <span style="font-weight: 700; color: {% if a.is_correct %}#34d399{% else %}#f87171{% endif %};">
+                        {% if a.is_correct %}<i class="fa-solid fa-check"></i> Compliant (+10){% else %}<i class="fa-solid fa-xmark"></i> Violation (0){% endif %}
+                    </span>
+                </div>
+
+                <p style="font-weight: 700; font-size: 1rem; color: var(--text-white); margin-bottom: 0.75rem; line-height: 1.45;">
+                    {{ a.question_text }}
+                </p>
+
+                <div style="font-size: 0.85rem; margin-bottom: 0.65rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                    <p style="color: {% if a.is_correct %}#a7f3d0{% else %}#fca5a5{% endif %};">
+                        <strong>Your Decision ({{ a.chosen_option }}):</strong> {{ a.chosen_text }}
+                    </p>
+                    {% if not a.is_correct %}
+                    <p style="color: #34d399;">
+                        <strong>Mandatory Safe Action ({{ a.correct_option }}):</strong> {{ a.correct_text }}
+                    </p>
+                    {% endif %}
+                </div>
+
+                {% if not a.is_correct and a.consequence %}
+                <div style="font-size: 0.8rem; background: rgba(245, 158, 11, 0.1); border-left: 3px solid var(--safety-amber); padding: 0.6rem 0.85rem; margin-bottom: 0.65rem; color: #fef08a; border-radius: 0.35rem;">
+                    <strong style="color: #facc15;">Consequence in Plant:</strong> {{ a.consequence }}
+                </div>
+                {% endif %}
+
+                {% if a.sop_reference %}
+                <p style="font-size: 0.75rem; color: var(--text-muted); font-family: monospace;">
+                    Tata Steel Standard: {{ a.sop_reference }}
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div style="display: flex; justify-content: space-between; gap: 1rem;">
+        <a href="{% url 'training_hub' %}" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i>
+            <span>Back to Training Hub</span>
+        </a>
+        <a href="{% url 'dashboard' %}" class="btn btn-primary">
+            <span>View Safety Profile</span>
+            <i class="fa-solid fa-chart-pie"></i>
+        </a>
+    </div>
+</div>
+{% endblock %}

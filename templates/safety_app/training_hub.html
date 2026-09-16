@@ -1,0 +1,157 @@
+{% extends 'safety_app/base.html' %}
+
+{% block title %}Training Hub | Tata Suraksha AI{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Top Welcome Card -->
+    <div class="card" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 style="font-size: 1.5rem; font-weight: 800; color: var(--text-white); margin-bottom: 0.25rem;">
+                {{ employee.department.name }}
+            </h1>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">
+                Employee: <strong style="color: var(--text-white);">{{ employee.name }}</strong> ({{ employee.emp_id }})
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 0.85rem; font-size: 0.85rem;">
+            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: var(--tata-blue); display: block;">{{ employee.attempts.count }}</span>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">Tests Completed</span>
+            </div>
+            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.5rem 1rem; border-radius: 0.5rem; text-align: center;">
+                <span style="font-weight: 800; font-size: 1.25rem; color: {% if weak_topics %}#f59e0b{% else %}#10b981{% endif %}; display: block;">
+                    {{ weak_topics|length }}
+                </span>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">Weak Areas</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- WEAK AREA ALERT (If any) -->
+    {% if weak_topics %}
+    <div class="alert-weak">
+        <div>
+            <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.25rem; color: #fef08a;">
+                <i class="fa-solid fa-triangle-exclamation"></i> Weak Safety Area Identified
+            </h3>
+            <p style="font-size: 0.85rem; line-height: 1.45; color: #e2e8f0;">
+                You recently scored low in:
+                {% for w in weak_topics %}
+                <strong style="color: #facc15;">{{ w.title }} ({{ w.percentage }}% accuracy)</strong>{% if not forloop.last %}, {% endif %}
+                {% endfor %}.
+                Take a targeted AI remediation retest to improve your safety score.
+            </p>
+        </div>
+
+        <a href="{% url 'retest_weak_areas' %}" class="btn btn-warning" style="flex-shrink: 0;">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>Train My Weak Areas (AI Retest)</span>
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Assessment Form -->
+    <form action="{% url 'start_assessment' %}" method="POST" id="quizForm">
+        {% csrf_token %}
+
+        <!-- Settings Bar -->
+        <div class="card" style="margin-bottom: 1.5rem; padding: 1rem 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem;">
+                    <span style="font-weight: 600; color: var(--text-white);">Difficulty Tier:</span>
+                    <select name="difficulty" style="padding: 0.45rem 0.75rem; background: #0f172a; color: white; border: 1px solid var(--border-subtle); border-radius: 0.4rem; font-size: 0.85rem;">
+                        <option value="beginner">Level 1 (Induction / Basic)</option>
+                        <option value="intermediate" selected>Level 2 (Field Operations)</option>
+                        <option value="advanced">Level 3 (Critical / Emergency)</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.85rem;">
+                    <span style="font-weight: 600; color: var(--text-white);">Questions:</span>
+                    <select name="count" style="padding: 0.45rem 0.75rem; background: #0f172a; color: white; border: 1px solid var(--border-subtle); border-radius: 0.4rem; font-size: 0.85rem;">
+                        <option value="3">3 Questions</option>
+                        <option value="5" selected>5 Questions</option>
+                        <option value="10">10 Questions</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Topic Selection -->
+        <h2 style="font-size: 1.1rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.75rem;">
+            Select Training Topic
+        </h2>
+
+        <div class="topic-grid">
+            {% for item in topic_list %}
+            <div class="topic-card {% if forloop.first %}selected{% endif %}" onclick="selectTopic(this, '{{ item.topic.topic_id }}')">
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+                        <span style="font-size: 0.7rem; font-weight: 700; font-family: monospace; background: #0f172a; border: 1px solid var(--border-subtle); color: #94a3b8; padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                            {{ item.topic.sop_code }}
+                        </span>
+
+                        {% if item.perf.total > 0 %}
+                            {% if item.is_weak %}
+                            <span style="font-size: 0.7rem; font-weight: 700; color: #fca5a5; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                                Weak ({{ item.perf.percentage }}%)
+                            </span>
+                            {% elif item.is_mastered %}
+                            <span style="font-size: 0.7rem; font-weight: 700; color: #6ee7b7; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                                Cleared ({{ item.perf.percentage }}%)
+                            </span>
+                            {% else %}
+                            <span style="font-size: 0.7rem; color: var(--text-muted);">
+                                {{ item.perf.percentage }}% Accuracy
+                            </span>
+                            {% endif %}
+                        {% else %}
+                        <span style="font-size: 0.7rem; color: #64748b;">Not Attempted</span>
+                        {% endif %}
+                    </div>
+
+                    <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-white); margin-bottom: 0.35rem;">
+                        {{ item.topic.title }}
+                    </h3>
+                    <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.45;">
+                        {{ item.topic.description }}
+                    </p>
+                </div>
+
+                <div style="margin-top: 1.25rem; padding-top: 0.75rem; border-top: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem;">
+                    <span style="color: var(--text-muted);" class="selection-status">
+                        {% if forloop.first %}<strong style="color: var(--tata-blue);">● Selected</strong>{% else %}Click to select{% endif %}
+                    </span>
+                    <input type="radio" name="topic_id" value="{{ item.topic.topic_id }}" {% if forloop.first %}checked{% endif %} style="accent-color: var(--tata-blue); transform: scale(1.15);">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div style="margin-top: 2rem; text-align: right;">
+            <button type="submit" class="btn btn-primary" style="padding: 0.85rem 2.25rem; font-size: 0.95rem;">
+                <i class="fa-solid fa-play"></i>
+                <span>Start AI Assessment</span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function selectTopic(card, topicId) {
+        document.querySelectorAll('.topic-card').forEach(c => {
+            c.classList.remove('selected');
+            c.querySelector('.selection-status').innerHTML = 'Click to select';
+            c.querySelector('input[type="radio"]').checked = false;
+        });
+
+        card.classList.add('selected');
+        card.querySelector('.selection-status').innerHTML = '<strong style="color: var(--tata-blue);">● Selected</strong>';
+        card.querySelector('input[type="radio"]').checked = true;
+    }
+</script>
+{% endblock %}

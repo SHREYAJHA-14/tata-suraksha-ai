@@ -1,0 +1,295 @@
+{% extends 'safety_app/base.html' %}
+
+{% block title %}Safety Assessment | Tata Suraksha AI{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <!-- Top Progress Line -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem;">
+                <span style="font-size: 0.75rem; font-weight: 800; color: #38bdf8; text-transform: uppercase; letter-spacing: 0.04em;" id="topicLabel">
+                    {% if assessment.is_remediation %}Targeted AI Retest{% else %}{{ assessment.topic_id|title }}{% endif %}
+                </span>
+                {% if assessment.difficulty == 'advanced' %}
+                <span style="font-size: 0.7rem; font-weight: 700; color: #fca5a5; background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                    Level 3 (Critical)
+                </span>
+                {% elif assessment.difficulty == 'beginner' %}
+                <span style="font-size: 0.7rem; font-weight: 700; color: #86efac; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                    Level 1 (Basic)
+                </span>
+                {% else %}
+                <span style="font-size: 0.7rem; font-weight: 700; color: #fde047; background: rgba(245, 158, 11, 0.2); border: 1px solid rgba(245, 158, 11, 0.4); padding: 0.15rem 0.45rem; border-radius: 0.35rem;">
+                    Level 2 (Field Operations)
+                </span>
+                {% endif %}
+            </div>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-white); margin-top: 0.15rem;" id="progressLabel">
+                Question 1 of {{ assessment.questions|length }}
+            </h2>
+        </div>
+
+        <div style="background: #1e293b; border: 1px solid var(--border-subtle); padding: 0.4rem 0.95rem; border-radius: 0.5rem; font-size: 0.85rem;">
+            Safety Score: <strong style="color: var(--safety-amber); font-family: monospace; font-size: 1.05rem;" id="scoreCounter">0</strong> pts
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div style="width: 100%; height: 6px; background: #1e293b; border-radius: 4px; overflow: hidden; margin-bottom: 1.75rem; border: 1px solid var(--border-subtle);">
+        <div id="progressBar" style="width: 20%; height: 100%; background: linear-gradient(90deg, #0284c7, #f59e0b); transition: width 0.3s ease;"></div>
+    </div>
+
+    <!-- Question Card -->
+    <div class="card" id="questionCard" style="padding: 2rem;">
+        <!-- Scenario Location -->
+        <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.65rem 0.95rem; border-radius: 0.45rem; font-size: 0.85rem; color: #94a3b8; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i class="fa-solid fa-location-dot" style="color: #f59e0b;"></i>
+            <span><strong style="color: var(--text-white);">Operational Setting:</strong> <span id="scenarioContext"></span></span>
+        </div>
+
+        <!-- Question -->
+        <h3 id="questionText" style="font-size: 1.2rem; font-weight: 700; color: var(--text-white); margin-bottom: 1.5rem; line-height: 1.5;">
+            Question text...
+        </h3>
+
+        <!-- Options List -->
+        <div id="optionsContainer" style="margin-bottom: 1.75rem;">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Submit Button -->
+        <div style="display: flex; justify-content: flex-end; border-top: 1px solid var(--border-subtle); padding-top: 1.25rem;">
+            <button type="button" id="submitDecisionBtn" disabled onclick="submitCurrentDecision()" class="btn btn-primary" style="opacity: 0.5; cursor: not-allowed; padding: 0.75rem 2rem;">
+                Submit Answer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Feedback Modal -->
+<div id="feedbackModal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <!-- Status Header -->
+        <div id="modalHeader" style="padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <span id="modalIcon" style="font-size: 1.5rem;"></span>
+                <div>
+                    <h3 id="modalTitle" style="font-size: 1.15rem; font-weight: 800; color: white;"></h3>
+                    <span id="modalPoints" style="font-size: 0.8rem; font-weight: 700; font-family: monospace;"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Content -->
+        <div style="padding: 1.5rem; font-size: 0.85rem; display: flex; flex-direction: column; gap: 1.15rem;">
+            <div>
+                <p style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem;">Your Selection</p>
+                <div id="yourDecisionBox" style="padding: 0.75rem 1rem; border-radius: 0.45rem;"></div>
+            </div>
+
+            <div id="correctActionBox" style="display: none;">
+                <p style="font-size: 0.75rem; font-weight: 700; color: #34d399; text-transform: uppercase; margin-bottom: 0.35rem;">Mandatory Safe Action</p>
+                <div id="correctActionContent" style="padding: 0.75rem 1rem; border-radius: 0.45rem; background: rgba(16, 185, 129, 0.15); color: #a7f3d0; border: 1px solid rgba(16, 185, 129, 0.35);"></div>
+            </div>
+
+            <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-left: 4px solid var(--safety-amber); padding: 0.85rem 1rem; border-radius: 0.45rem;">
+                <strong style="color: #facc15; display: block; margin-bottom: 0.25rem;">
+                    <i class="fa-solid fa-triangle-exclamation"></i> What could happen in the plant:
+                </strong>
+                <p id="consequenceText" style="color: #fef08a; line-height: 1.45;"></p>
+            </div>
+
+            <div style="background: #0f172a; border: 1px solid var(--border-subtle); padding: 0.85rem 1rem; border-radius: 0.45rem;">
+                <strong style="color: #38bdf8; display: block; margin-bottom: 0.25rem;">Safety Engineering Rationale:</strong>
+                <p id="explanationText" style="color: var(--text-body); line-height: 1.45;"></p>
+            </div>
+
+            <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem;">
+                <i class="fa-solid fa-book" style="color: #38bdf8;"></i>
+                <span>Standard: <strong id="sopReferenceText" style="color: var(--text-white); font-family: monospace;"></strong></span>
+            </div>
+        </div>
+
+        <div style="padding: 1.15rem 1.5rem; border-top: 1px solid var(--border-subtle); background: #162032; text-align: right;">
+            <button type="button" id="nextQuestionBtn" onclick="nextQuestion()" class="btn btn-primary" style="padding: 0.65rem 1.5rem;">
+                <span id="nextBtnText">Next Question</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const questions = {{ questions_json|safe }};
+    const topicId = "{{ assessment.topic_id }}";
+    const difficulty = "{{ assessment.difficulty }}";
+    const isRemediation = {% if assessment.is_remediation %}true{% else %}false{% endif %};
+    const csrfToken = "{{ csrf_token }}";
+
+    let currentIndex = 0;
+    let selectedOptionId = null;
+    let runningScore = 0;
+    let userAnswers = [];
+
+    function renderCurrentQuestion() {
+        const q = questions[currentIndex];
+        selectedOptionId = null;
+
+        document.getElementById('progressLabel').textContent = `Question ${currentIndex + 1} of ${questions.length}`;
+        document.getElementById('progressBar').style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+        document.getElementById('scoreCounter').textContent = runningScore;
+
+        document.getElementById('scenarioContext').textContent = q.scenario_context || 'Plant Operational Area';
+        document.getElementById('questionText').textContent = q.question;
+
+        const btn = document.getElementById('submitDecisionBtn');
+        btn.disabled = true;
+        btn.style.opacity = '0.5';
+        btn.style.cursor = 'not-allowed';
+
+        const container = document.getElementById('optionsContainer');
+        container.innerHTML = '';
+
+        q.options.forEach(opt => {
+            const optDiv = document.createElement('div');
+            optDiv.className = 'option-item';
+            optDiv.id = `opt_${opt.id}`;
+            optDiv.onclick = () => selectOption(opt.id);
+
+            optDiv.innerHTML = `
+                <div class="option-badge">${opt.id}</div>
+                <div style="font-size: 0.95rem; padding-top: 0.05rem; line-height: 1.45; color: var(--text-white);">${opt.text}</div>
+            `;
+            container.appendChild(optDiv);
+        });
+    }
+
+    function selectOption(optionId) {
+        selectedOptionId = optionId;
+        document.querySelectorAll('.option-item').forEach(el => el.classList.remove('selected'));
+        const chosenEl = document.getElementById(`opt_${optionId}`);
+        if (chosenEl) chosenEl.classList.add('selected');
+
+        const btn = document.getElementById('submitDecisionBtn');
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.cursor = 'pointer';
+    }
+
+    function submitCurrentDecision() {
+        if (!selectedOptionId) return;
+
+        const q = questions[currentIndex];
+        const chosen = q.options.find(o => o.id === selectedOptionId);
+        const correct = q.options.find(o => o.is_correct);
+        const isCorrect = chosen?.is_correct || false;
+
+        if (isCorrect) {
+            runningScore += 10;
+            document.getElementById('scoreCounter').textContent = runningScore;
+        }
+
+        userAnswers.push({
+            topic_id: q.topic_id || topicId,
+            scenario_context: q.scenario_context || '',
+            question: q.question,
+            chosen_option_id: selectedOptionId,
+            chosen_text: chosen?.text || '',
+            correct_option_id: correct?.id || '',
+            correct_text: correct?.text || '',
+            is_correct: isCorrect,
+            explanation: q.explanation || '',
+            consequence: q.consequence || '',
+            sop_reference: q.sop_reference || ''
+        });
+
+        const modal = document.getElementById('feedbackModal');
+        const header = document.getElementById('modalHeader');
+        const icon = document.getElementById('modalIcon');
+        const title = document.getElementById('modalTitle');
+        const points = document.getElementById('modalPoints');
+        const yourBox = document.getElementById('yourDecisionBox');
+        const correctBox = document.getElementById('correctActionBox');
+        const correctContent = document.getElementById('correctActionContent');
+
+        if (isCorrect) {
+            header.style.background = 'rgba(16, 185, 129, 0.15)';
+            header.style.borderBottomColor = 'rgba(16, 185, 129, 0.3)';
+            icon.innerHTML = '<i class="fa-solid fa-circle-check" style="color: #34d399;"></i>';
+            title.textContent = 'Correct Decision';
+            points.style.color = '#34d399';
+            points.textContent = '+10 Points';
+
+            yourBox.style.background = 'rgba(16, 185, 129, 0.15)';
+            yourBox.style.color = '#a7f3d0';
+            yourBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+            yourBox.innerHTML = `<strong>${chosen.id}.</strong> ${chosen.text}`;
+            correctBox.style.display = 'none';
+        } else {
+            header.style.background = 'rgba(239, 68, 68, 0.15)';
+            header.style.borderBottomColor = 'rgba(239, 68, 68, 0.3)';
+            icon.innerHTML = '<i class="fa-solid fa-circle-xmark" style="color: #f87171;"></i>';
+            title.textContent = 'Unsafe / Violation';
+            points.style.color = '#f87171';
+            points.textContent = '0 Points';
+
+            yourBox.style.background = 'rgba(239, 68, 68, 0.15)';
+            yourBox.style.color = '#fca5a5';
+            yourBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            yourBox.innerHTML = `<strong>${chosen.id}.</strong> ${chosen.text}`;
+
+            if (correct) {
+                correctBox.style.display = 'block';
+                correctContent.innerHTML = `<strong>${correct.id}.</strong> ${correct.text}`;
+            }
+        }
+
+        document.getElementById('consequenceText').textContent = q.consequence || 'Violation of safety protocol can lead to serious hazards.';
+        document.getElementById('explanationText').textContent = q.explanation || 'Follow standard operating guidelines.';
+        document.getElementById('sopReferenceText').textContent = q.sop_reference || 'TSS Standard Procedure';
+
+        if (currentIndex + 1 === questions.length) {
+            document.getElementById('nextBtnText').textContent = 'Finish & See Diagnostic';
+        } else {
+            document.getElementById('nextBtnText').textContent = 'Next Question';
+        }
+
+        modal.style.display = 'flex';
+    }
+
+    function nextQuestion() {
+        document.getElementById('feedbackModal').style.display = 'none';
+
+        if (currentIndex + 1 < questions.length) {
+            currentIndex += 1;
+            renderCurrentQuestion();
+        } else {
+            fetch('/submit-assessment/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    topic_id: topicId,
+                    difficulty: difficulty,
+                    is_remediation: isRemediation,
+                    answers: userAnswers
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                window.location.href = data.redirect_url || '/hub/';
+            })
+            .catch(() => {
+                window.location.href = '/hub/';
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCurrentQuestion);
+</script>
+{% endblock %}
