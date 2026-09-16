@@ -17,38 +17,77 @@ def get_current_employee(request):
 
 
 def login_view(request):
+    employee = get_current_employee(request)
+    if employee:
+        return redirect("training_hub")
+
+    error = None
+    emp_id = ""
+
+    if request.method == "POST":
+        emp_id = request.POST.get("emp_id", "").strip()
+
+        if not emp_id:
+            error = "Please enter your Employee ID."
+        else:
+            employee = Employee.objects.filter(emp_id__iexact=emp_id).first()
+            if employee:
+                request.session["employee_id"] = employee.emp_id
+                return redirect("training_hub")
+            else:
+                error = f"Employee ID '{emp_id}' not found. Please sign up first to create your account."
+
+    departments = Department.objects.all()
+    return render(request, "safety_app/login.html", {
+        "departments": departments,
+        "active_tab": "login",
+        "error": error,
+        "emp_id": emp_id,
+    })
+
+
+def signup_view(request):
+    employee = get_current_employee(request)
+    if employee:
+        return redirect("training_hub")
+
+    error = None
+    name = ""
+    emp_id = ""
+    department_id = None
+
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
         emp_id = request.POST.get("emp_id", "").strip()
         department_id = request.POST.get("department_id")
 
         if not name:
-            return redirect("login")
-
-        if not emp_id:
-            emp_id = f"TS-{Employee.objects.count() + 1001}"
-
-        department = get_object_or_404(Department, id=department_id)
-        employee, _ = Employee.objects.get_or_create(
-            emp_id=emp_id,
-            defaults={"name": name, "department": department}
-        )
-        if employee.name != name or employee.department != department:
-            employee.name = name
-            employee.department = department
-            employee.save()
-
-        request.session["employee_id"] = employee.emp_id
-        return redirect("training_hub")
-
-    employee = get_current_employee(request)
-    if employee:
-        return redirect("training_hub")
+            error = "Please enter your Full Name."
+        elif not emp_id:
+            error = "Please enter an Employee ID."
+        elif not department_id:
+            error = "Please select your plant department."
+        else:
+            if Employee.objects.filter(emp_id__iexact=emp_id).exists():
+                error = f"Employee ID '{emp_id}' is already registered. Please switch to Log In."
+            else:
+                department = get_object_or_404(Department, id=department_id)
+                employee = Employee.objects.create(
+                    emp_id=emp_id,
+                    name=name,
+                    department=department
+                )
+                request.session["employee_id"] = employee.emp_id
+                return redirect("training_hub")
 
     departments = Department.objects.all()
-
     return render(request, "safety_app/login.html", {
-        "departments": departments
+        "departments": departments,
+        "active_tab": "signup",
+        "error": error,
+        "name": name,
+        "emp_id": emp_id,
+        "selected_dept": int(department_id) if department_id and str(department_id).isdigit() else None,
     })
 
 

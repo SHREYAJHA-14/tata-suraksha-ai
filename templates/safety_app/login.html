@@ -1,59 +1,153 @@
 {% extends 'safety_app/base.html' %}
 
-{% block title %}Employee Login | Tata Suraksha AI{% endblock %}
+{% block title %}Employee Authentication | Tata Suraksha AI{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 480px; margin: 3rem auto;">
+<div class="container" style="max-width: 480px; margin: 2.5rem auto;">
     <!-- Simple Header -->
     <div style="text-align: center; margin-bottom: 2rem;">
         <h1 style="font-size: 2rem; font-weight: 800; color: white; margin-bottom: 0.5rem;">
             Tata Suraksha AI
         </h1>
         <p style="color: #9ca3af; font-size: 0.9rem;">
-            Safety Training & Assessment Platform
+            Safety Training & Diagnostic Assessment Platform
         </p>
     </div>
 
-    <!-- Login Form Card -->
-    <div class="card">
-        <h2 style="font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 1.5rem; text-align: center; border-bottom: 1px solid var(--card-border); padding-bottom: 1rem;">
-            Employee Login
-        </h2>
-
-        <form action="{% url 'login' %}" method="POST">
-            {% csrf_token %}
-            <div style="margin-bottom: 1.25rem;">
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.4rem;">
-                    Full Name
-                </label>
-                <input type="text" name="name" required placeholder="Enter Full Name" 
-                       style="width: 100%; padding: 0.75rem 1rem; background: #090d16; border: 1px solid var(--card-border); border-radius: 0.5rem; color: white; font-size: 0.9rem;">
-            </div>
-
-            <div style="margin-bottom: 1.25rem;">
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.4rem;">
-                    Employee ID
-                </label>
-                <input type="text" name="emp_id" required placeholder="Enter Employee ID" 
-                       style="width: 100%; padding: 0.75rem 1rem; background: #090d16; border: 1px solid var(--card-border); border-radius: 0.5rem; color: white; font-size: 0.9rem;">
-            </div>
-
-            <div style="margin-bottom: 1.5rem;">
-                <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.4rem;">
-                    Department
-                </label>
-                <select name="department_id" required 
-                        style="width: 100%; padding: 0.75rem 1rem; background: #090d16; border: 1px solid var(--card-border); border-radius: 0.5rem; color: white; font-size: 0.9rem;">
-                    {% for dept in departments %}
-                    <option value="{{ dept.id }}">{{ dept.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 0.95rem;">
+    <!-- Auth Card -->
+    <div class="card" style="padding: 1.75rem;">
+        <!-- Tab Navigation -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; background: #0f172a; padding: 0.35rem; border-radius: 0.5rem; border: 1px solid var(--border-subtle);">
+            <button type="button" id="tabLoginBtn" onclick="switchTab('login')" 
+                    style="flex: 1; padding: 0.65rem; border-radius: 0.35rem; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;">
                 Log In
             </button>
-        </form>
+            <button type="button" id="tabSignupBtn" onclick="switchTab('signup')" 
+                    style="flex: 1; padding: 0.65rem; border-radius: 0.35rem; border: none; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: all 0.2s ease;">
+                Sign Up / Register ID
+            </button>
+        </div>
+
+        <!-- Error Alert -->
+        {% if error %}
+        <div style="background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; padding: 0.85rem 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; font-size: 0.85rem; display: flex; align-items: flex-start; gap: 0.65rem; line-height: 1.45;">
+            <i class="fa-solid fa-triangle-exclamation" style="margin-top: 0.15rem; color: #ef4444; flex-shrink: 0;"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- TAB 1: LOG IN FORM -->
+        <div id="loginSection" style="display: none;">
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.45rem;">
+                        Registered Employee ID
+                    </label>
+                    <input type="text" name="emp_id" value="{{ emp_id|default:'' }}" required placeholder="Enter Employee ID" 
+                           style="width: 100%; padding: 0.8rem 1rem; background: #090d16; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: white; font-size: 0.95rem; font-family: monospace;">
+                    <span style="display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 0.4rem;">
+                        Only pre-registered employees can log in.
+                    </span>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 700;">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span>Log In</span>
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1rem; font-size: 0.85rem; color: #94a3b8;">
+                Don't have an Employee ID? 
+                <a href="javascript:void(0)" onclick="switchTab('signup')" style="color: #38bdf8; font-weight: 700; text-decoration: none;">
+                    Sign Up here &rarr;
+                </a>
+            </div>
+        </div>
+
+        <!-- TAB 2: SIGN UP FORM -->
+        <div id="signupSection" style="display: none;">
+            <form action="{% url 'signup' %}" method="POST">
+                {% csrf_token %}
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.4rem;">
+                        Full Name
+                    </label>
+                    <input type="text" name="name" value="{{ name|default:'' }}" required placeholder="Enter Full Name" 
+                           style="width: 100%; padding: 0.75rem 1rem; background: #090d16; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: white; font-size: 0.9rem;">
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.4rem;">
+                        Set Permanent Employee ID
+                    </label>
+                    <input type="text" name="emp_id" value="{{ emp_id|default:'' }}" required placeholder="Enter Employee ID (e.g. TS-1049)" 
+                           style="width: 100%; padding: 0.75rem 1rem; background: #090d16; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: white; font-size: 0.9rem; font-family: monospace;">
+                    <span style="display: block; font-size: 0.75rem; color: #94a3b8; margin-top: 0.35rem;">
+                        Once set, you will use this ID to log in forever.
+                    </span>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: #d1d5db; margin-bottom: 0.4rem;">
+                        Plant Department
+                    </label>
+                    <select name="department_id" required 
+                            style="width: 100%; padding: 0.75rem 1rem; background: #090d16; border: 1px solid var(--border-subtle); border-radius: 0.5rem; color: white; font-size: 0.9rem;">
+                        <option value="" disabled {% if not selected_dept %}selected{% endif %}>-- Select Plant Department --</option>
+                        {% for dept in departments %}
+                        <option value="{{ dept.id }}" {% if selected_dept == dept.id %}selected{% endif %}>
+                            {{ dept.name }} ({{ dept.code }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 700;">
+                    <i class="fa-solid fa-user-plus"></i>
+                    <span>Sign Up & Create ID</span>
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid var(--border-subtle); padding-top: 1rem; font-size: 0.85rem; color: #94a3b8;">
+                Already have an ID? 
+                <a href="javascript:void(0)" onclick="switchTab('login')" style="color: #38bdf8; font-weight: 700; text-decoration: none;">
+                    Log In with ID &rarr;
+                </a>
+            </div>
+        </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function switchTab(tab) {
+        const loginSec = document.getElementById('loginSection');
+        const signupSec = document.getElementById('signupSection');
+        const tabLoginBtn = document.getElementById('tabLoginBtn');
+        const tabSignupBtn = document.getElementById('tabSignupBtn');
+
+        if (tab === 'signup') {
+            loginSec.style.display = 'none';
+            signupSec.style.display = 'block';
+            tabSignupBtn.style.background = 'var(--tata-blue)';
+            tabSignupBtn.style.color = '#ffffff';
+            tabLoginBtn.style.background = 'transparent';
+            tabLoginBtn.style.color = '#94a3b8';
+        } else {
+            loginSec.style.display = 'block';
+            signupSec.style.display = 'none';
+            tabLoginBtn.style.background = 'var(--tata-blue)';
+            tabLoginBtn.style.color = '#ffffff';
+            tabSignupBtn.style.background = 'transparent';
+            tabSignupBtn.style.color = '#94a3b8';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const activeTab = "{{ active_tab|default:'login' }}";
+        switchTab(activeTab);
+    });
+</script>
 {% endblock %}
