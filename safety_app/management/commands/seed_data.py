@@ -220,4 +220,15 @@ class Command(BaseCommand):
                     sop_reference="TSS-02 §3.1"
                 )
 
+        # 4. Superuser (Admin) Provisioning
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        if not User.objects.filter(username="shreya").exists():
+            User.objects.create_superuser(
+                username="shreya",
+                email="shreya@tatasteel.com",
+                password="school28"
+            )
+            self.stdout.write(self.style.SUCCESS("Provisioned superuser: shreya / school28"))
+
         self.stdout.write(self.style.SUCCESS("Successfully seeded Tata Steel safety data and demo profiles!"))
